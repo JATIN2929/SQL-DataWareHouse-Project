@@ -9,6 +9,14 @@ Script Purpose:
 ===============================================================================
 */
 
+USE DataWarehouse;
+GO
+
+-- EnsureBronzeSchemaExists
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'bronze')
+    EXEC('CREATE SCHEMA bronze');
+GO
+
 IF OBJECT_ID('bronze.crm_cust_info', 'U') IS NOT NULL
     DROP TABLE bronze.crm_cust_info;
 GO
@@ -120,7 +128,7 @@ GO
 --   - Part of the data warehouse ETL pipeline (bronze layer ingestion)
 -- =====================================================================
 BULK INSERT bronze.crm_cust_info
-FROM 'datasets/source_crm/cust_info.csv'
+FROM '/var/opt/mssql/data/datasets/source_crm/cust_info.csv'
 WITH(
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
@@ -156,7 +164,7 @@ GO
 --   - Part of the data warehouse ETL pipeline (bronze layer ingestion)
 -- =====================================================================
 BULK INSERT bronze.crm_prd_info
-FROM 'datasets/source_crm/prd_info.csv'
+FROM '/var/opt/mssql/data/datasets/source_crm/prd_info.csv'
 WITH(
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
@@ -168,7 +176,7 @@ GO
 -- BULK INSERT: Load CRM Sales Details into Bronze Layer
 -- =====================================================================
 BULK INSERT bronze.crm_sales_details
-FROM 'datasets/source_crm/sales_details.csv'
+FROM '/var/opt/mssql/data/datasets/source_crm/sales_details.csv'
 WITH(
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
@@ -180,7 +188,7 @@ GO
 -- BULK INSERT: Load ERP Location Data into Bronze Layer
 -- =====================================================================
 BULK INSERT bronze.erp_loc_a101
-FROM 'datasets/source_erp/loc_a101.csv'
+FROM '/var/opt/mssql/data/datasets/source_erp/LOC_A101.csv'
 WITH(
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
@@ -192,7 +200,7 @@ GO
 -- BULK INSERT: Load ERP Customer Data into Bronze Layer
 -- =====================================================================
 BULK INSERT bronze.erp_cust_az12
-FROM 'datasets/source_erp/cust_az12.csv'
+FROM '/var/opt/mssql/data/datasets/source_erp/CUST_AZ12.csv'
 WITH(
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
@@ -204,13 +212,13 @@ GO
 -- BULK INSERT: Load ERP Product Category Data into Bronze Layer
 -- =====================================================================
 BULK INSERT bronze.erp_px_cat_g1v2
-FROM 'datasets/source_erp/px_cat_g1v2.csv'
+FROM '/var/opt/mssql/data/datasets/source_erp/PX_CAT_G1V2.csv'
 WITH(
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
     TABLOCK
 )
-
+GO
 
 SELECT * FROM bronze.crm_cust_info;
 GO
