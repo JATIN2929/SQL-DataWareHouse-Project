@@ -18,7 +18,7 @@ NOTE:
 ====================================================================
 */
 
-CREATE OR ALTER PROCEDURE bronze.load_data_into_bronze_tables
+CREATE OR ALTER PROCEDURE bronze.load_bronze
 AS
 BEGIN
     DECLARE @start_time DATETIME,@end_time DATETIME, @batch_start_time DATETIME,@batch_end_time DATETIME;
@@ -279,7 +279,7 @@ END TRY
 END
 
 -- EXECUTE THE PROCEDURE TO LOAD DATA INTO BRONZE TABLES
-EXEC bronze.load_data_into_bronze_tables;
+EXEC bronze.load_bronze;
 GO
 SELECT * FROM bronze.crm_cust_info;
 GO
