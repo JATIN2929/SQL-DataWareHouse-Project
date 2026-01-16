@@ -72,8 +72,9 @@ cst_create_date
 FROM(
 SELECT *,
 ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
-FROM bronze.crm_cust_info
-) T WHERE flag_last = 1  --- SELECTING MOST RECENT RECORD PER cst_id ---;
+FROM bronze.crm_cust_info WHERE LEN(cst_key) >=10
+) T WHERE flag_last = 1  
+--- SELECTING MOST RECENT RECORD PER cst_id ---;
 
   SET @batch_end_time = GETDATE();
         PRINT '  Loading silver.crm_cust_info completed at: ' + CONVERT(NVARCHAR, @batch_end_time, 120);    
@@ -204,7 +205,7 @@ CASE
     WHEN SUBSTRING(UPPER(TRIM(gen)), 1, 4) = 'MALE' THEN 'Male' 
     ELSE 'Unknown'
 END AS gen
-FROM bronze.erp_cust_az12
+FROM bronze.erp_cust_az12 
 
   SET @batch_end_time = GETDATE();
         PRINT '  Loading silver.erp_cust_az12 completed at: ' + CONVERT(NVARCHAR, @batch_end_time, 120);    
@@ -232,7 +233,7 @@ CASE
     WHEN TRIM(cntry) = '' OR TRIM(cntry) IS NULL THEN 'Unknown'
     ELSE TRIM(cntry)
 END AS cntry
-FROM bronze.erp_loc_a101
+FROM bronze.erp_loc_a101 
 
   SET @batch_end_time = GETDATE();
         PRINT '  Loading silver.erp_loc_a101 completed at: ' + CONVERT(NVARCHAR, @batch_end_time, 120);    
